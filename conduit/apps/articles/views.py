@@ -21,6 +21,7 @@ class ArticleViewSet(mixins.CreateModelMixin,
     permission_classes = (IsAuthenticatedOrReadOnly,)
     renderer_classes = (ArticleJSONRenderer,)
     serializer_class = ArticleSerializer
+    history_serializer_class = HistorySerializer
 
     def get_queryset(self):
         queryset = self.queryset
@@ -42,6 +43,20 @@ class ArticleViewSet(mixins.CreateModelMixin,
         return queryset
 
     def create(self, request):
+        # save history
+        history_serializer_context = {
+            'author': request.user.profile,
+            'request': request
+        }
+        history_serializer_data = request.data.get('history', {})
+        history_serializer = self.history_serializer_class(
+            data=history_serializer_data, 
+            context=history_serializer_context
+        )
+        history_serializer.is_valid(raise_exception=True)
+        history_serializer.save()
+        # save history end
+
         serializer_context = {
             'author': request.user.profile,
             'request': request
@@ -102,6 +117,20 @@ class ArticleViewSet(mixins.CreateModelMixin,
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
+
+        # save history
+        history_serializer_context = {
+            'author': request.user.profile,
+            'request': request
+        }
+        history_serializer_data = request.data.get('history', {})
+        history_serializer = self.history_serializer_class(
+            data=history_serializer_data, 
+            context=history_serializer_context
+        )
+        history_serializer.is_valid(raise_exception=True)
+        history_serializer.save()
+        # save history end
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 

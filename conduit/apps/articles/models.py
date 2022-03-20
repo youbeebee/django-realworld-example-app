@@ -52,8 +52,7 @@ class History(TimestampedModel):
         'profiles.Profile', on_delete=models.CASCADE, related_name='history'
     )
 
-    body = models.TextField()
+    req = models.TextField()
 
     def __str__(self):
         return self.author + ' History'
-        

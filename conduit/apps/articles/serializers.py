@@ -115,9 +115,23 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class HistorySerializer(serializers.ModelSerializer):
+    author = ProfileSerializer(required=False)
+
+    req = serializers.CharField(required=False)
+
     class Meta:
         model = History
         fields = (
             'author',
-            'body',
+            'req',
         )
+
+    def create(self, validated_data):
+        author = self.context.get('author', None)
+
+        req = self.context.get('request', None)
+        req = req.method
+
+        history = History.objects.create(author=author, req=req)
+
+        return history
