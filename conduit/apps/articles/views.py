@@ -134,6 +134,32 @@ class ArticleViewSet(mixins.CreateModelMixin,
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def delete(self, request, slug):
+        serializer_context = {'request': request}
+
+        try:
+            article = Article.objects.get(slug=slug)
+        except Article.DoesNotExist:
+            raise NotFound('An article with this slug does not exist.')
+
+        article.delete()
+
+        # save history
+        history_serializer_context = {
+            'author': request.user.profile,
+            'request': request
+        }
+        history_serializer_data = request.data.get('history', {})
+        history_serializer = self.history_serializer_class(
+            data=history_serializer_data, 
+            context=history_serializer_context
+        )
+        history_serializer.is_valid(raise_exception=True)
+        history_serializer.save()
+        # save history end
+
+        return Response({'success': 'Deleted'}, status=200)
+
 
 class CommentsListCreateAPIView(generics.ListCreateAPIView):
     lookup_field = 'article__slug'
