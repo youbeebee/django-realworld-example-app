@@ -6,9 +6,9 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Article, Comment, Tag
+from .models import Article, Comment, Tag, History
 from .renderers import ArticleJSONRenderer, CommentJSONRenderer
-from .serializers import ArticleSerializer, CommentSerializer, TagSerializer
+from .serializers import ArticleSerializer, CommentSerializer, TagSerializer, HistorySerializer
 
 
 class ArticleViewSet(mixins.CreateModelMixin, 
@@ -229,3 +229,10 @@ class ArticlesFeedAPIView(generics.ListAPIView):
         )
 
         return self.get_paginated_response(serializer.data)
+
+
+class HistoryAPIView(generics.ListAPIView):
+    #permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    serializer_class = HistorySerializer
+    queryset = History.objects.all()

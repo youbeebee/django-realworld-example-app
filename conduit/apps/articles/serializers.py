@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from conduit.apps.profiles.serializers import ProfileSerializer
 
-from .models import Article, Comment, Tag
+from .models import Article, Comment, Tag, History
 from .relations import TagRelatedField
 
 

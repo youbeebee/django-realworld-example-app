@@ -49,10 +49,11 @@ class Tag(TimestampedModel):
 
 class History(TimestampedModel):
     author = models.ForeignKey(
-        'profiles.Profile', on_delete=models.CASCADE, related_name='articles'
+        'profiles.Profile', on_delete=models.CASCADE, related_name='history'
     )
 
     body = models.TextField()
 
     def __str__(self):
         return self.author + ' History'
+        
