@@ -112,3 +112,12 @@ class TagSerializer(serializers.ModelSerializer):
 
     def to_representation(self, obj):
         return obj.tag
+
+
+class HistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = History
+        fields = (
+            'author',
+            'body',
+        )

@@ -45,3 +45,14 @@ class Tag(TimestampedModel):
 
     def __str__(self):
         return self.tag
+
+
+class History(TimestampedModel):
+    author = models.ForeignKey(
+        'profiles.Profile', on_delete=models.CASCADE, related_name='articles'
+    )
+
+    body = models.TextField()
+
+    def __str__(self):
+        return self.author + ' History'
