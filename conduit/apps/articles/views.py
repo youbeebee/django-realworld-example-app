@@ -287,7 +287,14 @@ class ArticlesFeedAPIView(generics.ListAPIView):
 
 
 class HistoryAPIView(generics.ListAPIView):
-    #permission_classes = (IsAuthenticated,)
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsAuthenticated,)
+    #permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = HistorySerializer
     queryset = History.objects.all()
+
+    def get_queryset(self):
+        user = self.request.user.profile
+
+        return History.objects.filter(
+            author=user
+        )
