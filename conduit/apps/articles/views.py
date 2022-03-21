@@ -46,7 +46,8 @@ class ArticleViewSet(mixins.CreateModelMixin,
         # save history
         history_serializer_context = {
             'author': request.user.profile,
-            'request': request
+            'request': request,
+            'article': request.data.get('article', {})
         }
         history_serializer_data = request.data.get('history', {})
         history_serializer = self.history_serializer_class(
@@ -121,7 +122,8 @@ class ArticleViewSet(mixins.CreateModelMixin,
         # save history
         history_serializer_context = {
             'author': request.user.profile,
-            'request': request
+            'request': request,
+            'article': self.queryset.get(slug=slug)
         }
         history_serializer_data = request.data.get('history', {})
         history_serializer = self.history_serializer_class(
@@ -142,12 +144,11 @@ class ArticleViewSet(mixins.CreateModelMixin,
         except Article.DoesNotExist:
             raise NotFound('An article with this slug does not exist.')
 
-        article.delete()
-
         # save history
         history_serializer_context = {
             'author': request.user.profile,
-            'request': request
+            'request': request,
+            'article': article
         }
         history_serializer_data = request.data.get('history', {})
         history_serializer = self.history_serializer_class(
@@ -157,6 +158,8 @@ class ArticleViewSet(mixins.CreateModelMixin,
         history_serializer.is_valid(raise_exception=True)
         history_serializer.save()
         # save history end
+
+        article.delete()
 
         return Response({'success': 'Deleted'}, status=200)
 

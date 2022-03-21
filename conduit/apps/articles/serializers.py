@@ -118,12 +118,14 @@ class HistorySerializer(serializers.ModelSerializer):
     author = ProfileSerializer(required=False)
 
     req = serializers.CharField(required=False)
+    title = serializers.CharField(required=False)
 
     class Meta:
         model = History
         fields = (
             'author',
             'req',
+            'title',
         )
 
     def create(self, validated_data):
@@ -131,7 +133,11 @@ class HistorySerializer(serializers.ModelSerializer):
 
         req = self.context.get('request', None)
         req = req.method
+        if req == 'POST':
+            title = self.context['article']['title']
+        else:
+            title = self.context['article'].title
 
-        history = History.objects.create(author=author, req=req)
+        history = History.objects.create(author=author, req=req, title=title)
 
         return history
