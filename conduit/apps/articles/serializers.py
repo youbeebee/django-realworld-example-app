@@ -119,6 +119,7 @@ class HistorySerializer(serializers.ModelSerializer):
 
     req = serializers.CharField(required=False)
     title = serializers.CharField(required=False)
+    body = serializers.CharField(required=False)
 
     class Meta:
         model = History
@@ -126,6 +127,7 @@ class HistorySerializer(serializers.ModelSerializer):
             'author',
             'req',
             'title',
+            'body',
         )
 
     def create(self, validated_data):
@@ -138,6 +140,9 @@ class HistorySerializer(serializers.ModelSerializer):
         else:
             title = self.context['article'].title
 
-        history = History.objects.create(author=author, req=req, title=title)
+        body = self.context.get('request', None)
+        body = body.data
+
+        history = History.objects.create(author=author, req=req, title=title, body=body)
 
         return history

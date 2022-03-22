@@ -54,6 +54,7 @@ class History(TimestampedModel):
 
     req = models.TextField()
     title = models.TextField()
+    body = models.TextField()
 
     def __str__(self):
         return self.author + ' History'
