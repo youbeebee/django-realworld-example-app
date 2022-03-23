@@ -2036,6 +2036,8 @@
                   "    tests['Result contains \"req\" property'] = results.hasOwnProperty('req');",
                   "    tests['Result contains \"title\" property'] = results.hasOwnProperty('title');",
                   "    tests['Result contains \"body\" property'] = results.hasOwnProperty('body');",
+                  "    tests['Result contains \"time\" property'] = results.hasOwnProperty('time');",
+                  "    ",
                   "    console.log(responseBody)",
                   "}",
                   ""
