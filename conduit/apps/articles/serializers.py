@@ -120,6 +120,7 @@ class HistorySerializer(serializers.ModelSerializer):
     req = serializers.CharField(required=False)
     title = serializers.CharField(required=False)
     body = serializers.CharField(required=False)
+    time = serializers.SerializerMethodField(required=False, method_name='get_created_at')
 
     class Meta:
         model = History
@@ -128,6 +129,7 @@ class HistorySerializer(serializers.ModelSerializer):
             'req',
             'title',
             'body',
+            'time',
         )
 
     def create(self, validated_data):
@@ -146,3 +148,6 @@ class HistorySerializer(serializers.ModelSerializer):
         history = History.objects.create(author=author, req=req, title=title, body=body)
 
         return history
+
+    def get_created_at(self, instance):
+        return instance.created_at.isoformat()
